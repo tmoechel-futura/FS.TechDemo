@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "Shared";
+import "google/protobuf/empty.proto";
+
+package order;
+
+service GrpcOrderService {
+  rpc GetOrders (google.protobuf.Empty) returns (stream OrderResponse);
+  rpc GetOrderById (OrderByIdRequest) returns (OrderResponse);
+  rpc CreateOrder (OrderCreateRequest) returns (OrderResponse);
+}
+
+message OrderRequest {
+  string category = 1;
+}
+
+message OrderResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message OrderByIdRequest {
+  string uuid = 1;
+}
+
+message OrderCreateRequest{
+  string name = 1;
+  string description = 2;
+}

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="11.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+        <PackageReference Include="HotChocolate.AspNetCore" Version="12.15.0" />
+        <PackageReference Include="HotChocolate.Data" Version="12.15.2" />
+        <PackageReference Include="HotChocolate.Validation" Version="12.15.2" />
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.15.0" />
+        <PackageReference Include="HotChocolate.Types.Scalars" Version="12.15.2" />
+        <PackageReference Include="HotChocolate.Utilities" Version="12.15.2" />
+        <PackageReference Include="MediatR" Version="11.0.0" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FS.TechDemo.Shared\FS.TechDemo.Shared.csproj" />
+    </ItemGroup>
+
+</Project>
