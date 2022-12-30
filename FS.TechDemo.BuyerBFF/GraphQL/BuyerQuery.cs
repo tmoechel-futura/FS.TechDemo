@@ -20,7 +20,7 @@ public class BuyerQuery  : ObjectType
     protected override void Configure(IObjectTypeDescriptor descriptor)
     {
         base.Configure(descriptor);
-        descriptor.Field("OrderList").Type<ListType<Order>>()
+        descriptor.Field("OrderList").Type<ListType<OrderType>>()
             .Resolve(_mediator.GetResolverFunc<OrderTypeResolvableRequest>(_loggerFactory));
     }
 }
