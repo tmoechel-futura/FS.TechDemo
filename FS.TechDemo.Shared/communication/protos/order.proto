@@ -18,7 +18,8 @@ message OrderRequest {
 message OrderResponse {
   string id = 1;
   string name = 2;
-  string description = 3;
+  string number = 3;
+  double total = 4;
 }
 
 message OrderByIdRequest {
