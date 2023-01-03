@@ -58,7 +58,7 @@ internal class OrderServiceOut : IOrderServiceOut
         return new List<OrderResponse>();
     }
 
-    public async Task<string> CreateOrder(OrderCreateRequest request, CancellationToken cancellationToken)
+    public async Task<Int32Value> CreateOrder(CreateOrderRequest request, CancellationToken cancellationToken)
     {
         var address = _grpcOptions.Value.Grpc.FirstOrDefault(t => t.Destination == "OrderService")
             ?.Channel
@@ -68,11 +68,11 @@ internal class OrderServiceOut : IOrderServiceOut
         {
             var channel = GrpcChannel.ForAddress(address);
             var client = new GrpcOrderService.GrpcOrderServiceClient(channel);
-
+    
             var orderCreateResponse = await client.CreateOrderAsync(request);
-            return orderCreateResponse.ToString();
+            return orderCreateResponse;
         }
-
-        return string.Empty;
+    
+        return new Int32Value();
     }
 }
