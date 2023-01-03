@@ -1,6 +1,7 @@
 ﻿using FS.TechDemo.BuyerBFF.GraphQL.Extensions;
 using FS.TechDemo.BuyerBFF.GraphQL.RequestHandler;
 using FS.TechDemo.BuyerBFF.GraphQL.Types.Order;
+using Google.Protobuf.WellKnownTypes;
 using MediatR;
 
 namespace FS.TechDemo.BuyerBFF.GraphQL;
@@ -20,8 +21,8 @@ public class BuyerMutation: ObjectType
     protected override void Configure(IObjectTypeDescriptor descriptor)
     {
         base.Configure(descriptor);
-        descriptor.Field("CreateOrder").Type<StringType>()
-            .Argument("CreateOrderInput", argument => argument.Type<NonNullType<OrderInputType>>())
-            .Resolve(_mediator.GetResolverFunc<CreateOrderRequest>(_loggerFactory));
+        descriptor.Field("CreateOrder").Type<IntType>()
+            .Argument("CreateOrderInput", argument => argument.Type<NonNullType<OrderTypeInput>>())
+            .Resolve(_mediator.GetResolverFunc<CreateOrderResolvableRequest>(_loggerFactory));
     }
 }

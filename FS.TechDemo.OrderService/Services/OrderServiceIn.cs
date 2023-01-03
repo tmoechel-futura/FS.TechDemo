@@ -31,4 +31,10 @@ public class OrderService : GrpcOrderService.GrpcOrderServiceBase
             await responseStream.WriteAsync(recipeResponse);
         }
     }
+
+    public override Task<Int32Value> CreateOrder(CreateOrderRequest request, ServerCallContext context)
+    {
+        var id = _orderRepository.AddOrder(request.Name, request.Number, request.Total);
+        return Task.FromResult(new Int32Value() {Value = id});
+    }
 }
