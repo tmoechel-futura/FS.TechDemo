@@ -1,15 +1,9 @@
 using System.Reflection;
-using FS.TechDemo.OrderService.Repositories;
-using FS.TechDemo.OrderService.Services;
-using FS.TechDemo.Shared;
 using MassTransit;
 using Serilog;
-using Serilog.Core.Enrichers;
 using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddLogging();
 
 builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
     .WriteTo.Seq("http://localhost:5341"));
@@ -52,29 +46,6 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-builder.Services.AddOptions<MassTransitHostOptions>()
-    .Configure(options =>
-    {
-        // if specified, waits until the bus is started before
-        // returning from IHostedService.StartAsync
-        // default is false
-        options.WaitUntilStarted = true;
-
-        // if specified, limits the wait time when starting the bus
-        options.StartTimeout = TimeSpan.FromSeconds(10);
-
-        // if specified, limits the wait time when stopping the bus
-        options.StopTimeout = TimeSpan.FromSeconds(30);
-    });
-
-
-// Add services to the container.
-builder.Services.AddGrpc();
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-
 var app = builder.Build();
-app.UseCustomRequestLogging();
-app.MapGrpcService<OrderService>();
 
 app.Run();
