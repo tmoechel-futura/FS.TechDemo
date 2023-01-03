@@ -16,11 +16,13 @@ public class CreateOrderResolvableRequestHandler : IRequestHandler<CreateOrderRe
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IMapper _mapper;
+    private readonly ILogger<CreateOrderResolvableRequestHandler> _logger;
 
-    public CreateOrderResolvableRequestHandler(IServiceScopeFactory serviceScopeFactory, IMapper mapper)
+    public CreateOrderResolvableRequestHandler(IServiceScopeFactory serviceScopeFactory, IMapper mapper, ILogger<CreateOrderResolvableRequestHandler> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
         _mapper = mapper;
+        _logger = logger;
     }
 
 
@@ -31,8 +33,8 @@ public class CreateOrderResolvableRequestHandler : IRequestHandler<CreateOrderRe
 
         using (var scope = _serviceScopeFactory.CreateScope())
         {
-            var scopedServices = scope.ServiceProvider;
-            var _orderServiceOut = scopedServices.GetRequiredService<IOrderServiceOut>();
+            var scopeServiceProvider = scope.ServiceProvider;
+            var _orderServiceOut = scopeServiceProvider.GetRequiredService<IOrderServiceOut>();
         
             var createOrderId = await _orderServiceOut.CreateOrder(createOrderRequest, cancellationToken);
             return createOrderId.Value;

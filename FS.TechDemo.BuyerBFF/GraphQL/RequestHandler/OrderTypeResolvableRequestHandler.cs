@@ -19,7 +19,7 @@ public class OrderTypeResolvableRequestHandler : IRequestHandler<OrderTypeResolv
 
     public async Task<object> Handle(OrderTypeResolvableRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Getting Request");
+        _logger.LogInformation("Getting orders from order service");
         using (var scope = _serviceScopeFactory.CreateScope())
         {
             var scopedServices = scope.ServiceProvider;

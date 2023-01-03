@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.46.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>

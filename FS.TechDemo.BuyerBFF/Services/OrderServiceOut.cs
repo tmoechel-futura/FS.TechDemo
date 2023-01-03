@@ -41,10 +41,10 @@ internal class OrderServiceOut : IOrderServiceOut
                var scopedServices = scope.ServiceProvider;
                var loggerFactory = scopedServices.GetRequiredService<ILoggerFactory>();
                var logger = loggerFactory.CreateLogger<OrderResponse>();
-               logger.LogInformation("This is the address (scope): " + address);
+               logger.LogInformation("calling order service endpoint on {Address}", address);
            }
            
-            var orderListResponse = client.GetOrders(new Empty());
+            var orderListResponse = client.GetOrders(new Empty());  
             var responseStream = orderListResponse.ResponseStream;
 
             var result = new List<OrderResponse>(); 
