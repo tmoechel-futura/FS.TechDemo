@@ -16,11 +16,13 @@ public class CreateOrderResolvableRequestHandler : IRequestHandler<CreateOrderRe
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IMapper _mapper;
+    private readonly ILogger<CreateOrderResolvableRequestHandler> _logger;
 
-    public CreateOrderResolvableRequestHandler(IServiceScopeFactory serviceScopeFactory, IMapper mapper)
+    public CreateOrderResolvableRequestHandler(IServiceScopeFactory serviceScopeFactory, IMapper mapper, ILogger<CreateOrderResolvableRequestHandler> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
         _mapper = mapper;
+        _logger = logger;
     }
 
 

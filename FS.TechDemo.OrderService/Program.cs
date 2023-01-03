@@ -2,6 +2,8 @@ using System.Reflection;
 using FS.TechDemo.OrderService.Repositories;
 using FS.TechDemo.OrderService.Services;
 using Serilog;
+using Serilog.Core.Enrichers;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,10 +14,12 @@ builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
     .WriteTo.Seq("http://localhost:5341"));
 
 Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
     .Enrich.FromLogContext()
+    .Enrich.WithMachineName()
+    .Enrich.WithProperty("Assembly", typeof(Program).Assembly.GetName().Name!)
     .WriteTo.Console()
     .CreateLogger();
-
 
 // Add services to the container.
 builder.Services.AddGrpc();
