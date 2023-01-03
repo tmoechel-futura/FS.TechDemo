@@ -33,8 +33,8 @@ public class CreateOrderResolvableRequestHandler : IRequestHandler<CreateOrderRe
 
         using (var scope = _serviceScopeFactory.CreateScope())
         {
-            var scopedServices = scope.ServiceProvider;
-            var _orderServiceOut = scopedServices.GetRequiredService<IOrderServiceOut>();
+            var scopeServiceProvider = scope.ServiceProvider;
+            var _orderServiceOut = scopeServiceProvider.GetRequiredService<IOrderServiceOut>();
         
             var createOrderId = await _orderServiceOut.CreateOrder(createOrderRequest, cancellationToken);
             return createOrderId.Value;

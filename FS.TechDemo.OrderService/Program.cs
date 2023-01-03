@@ -1,6 +1,7 @@
 using System.Reflection;
 using FS.TechDemo.OrderService.Repositories;
 using FS.TechDemo.OrderService.Services;
+using FS.TechDemo.Shared;
 using Serilog;
 using Serilog.Core.Enrichers;
 using Serilog.Events;
@@ -27,6 +28,7 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 var app = builder.Build();
+app.UseCustomRequestLogging();
 app.MapGrpcService<OrderService>();
 
 app.Run();
