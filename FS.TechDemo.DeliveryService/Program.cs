@@ -42,6 +42,11 @@ builder.Services.AddMassTransit(x =>
             h.Username("rabbitmq-user");
             h.Password("rabbitmq-password");
         });
+        cfg.UseMessageRetry(r=>
+        {
+            r.Immediate(5);
+
+        });
         cfg.ConfigureEndpoints(context);
     });
 });
