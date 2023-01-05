@@ -4,21 +4,19 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>DeliveryService</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FS.TechDemo.Shared\FS.TechDemo.Shared.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="11.0.1" />
-      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.46.0" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.10" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.10" />
         <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
         <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
         <PackageReference Include="Serilog.Extensions" Version="2.2.0" />
         <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FS.TechDemo.Shared\FS.TechDemo.Shared.csproj" />
     </ItemGroup>
 
 </Project>
