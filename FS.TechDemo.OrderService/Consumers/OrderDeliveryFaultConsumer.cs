@@ -1,25 +1,18 @@
-﻿using FS.TechDemo.Shared.communication.RabbitMQ.Contracts;
+﻿using FS.TechDemo.Shared.communication.RabbitMQ.Consumer;
+using FS.TechDemo.Shared.communication.RabbitMQ.Contracts;
 using MassTransit;
 
 namespace FS.TechDemo.OrderService.Consumers;
 
-public class OrderDeliveryFaultConsumer : IConsumer<Fault<OrderDelivery>>
+public class OrderDeliveryFaultConsumer : GenericFaultConsumer<OrderDelivery>
 
 {
-    private readonly ILogger<OrderDeliveryFaultConsumer> _logger;
+    public OrderDeliveryFaultConsumer(ILogger<OrderDeliveryFaultConsumer> logger) : base(logger)
+    {}
 
-    public OrderDeliveryFaultConsumer(ILogger<OrderDeliveryFaultConsumer> logger)
+    public override Task Consume(ConsumeContext<Fault<OrderDelivery>> context)
     {
-        _logger = logger;
-    }
-    
-    public Task Consume(ConsumeContext<Fault<OrderDelivery>> context)
-    {
-        _logger.LogInformation("Fault Order message: {Param}", context.Message.Message);
-        _logger.LogInformation("Fault Timestampg: {Param}", context.Message.Timestamp);
-        _logger.LogInformation("Fault Host: {Param}", context.Message.Host.MachineName);
-        _logger.LogInformation("Fault MessageId: {Param}", context.Message.FaultedMessageId);
-        
-        return Task.CompletedTask;
+        _logger.LogInformation("Fault Message: {Param}", context.Message.Message);
+        return base.Consume(context);
     }
 }

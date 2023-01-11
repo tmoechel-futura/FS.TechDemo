@@ -39,7 +39,7 @@ public class OrderService : GrpcOrderService.GrpcOrderServiceBase
     public override async Task<Int32Value> CreateOrder(CreateOrderRequest request, ServerCallContext context)
     {
         var id = _orderRepository.AddOrder(request.Name, request.Number, request.Total);
-        await _bus.Publish(new OrderDelivery { OrderName = request.Name }, context.CancellationToken);
+        await _bus.Publish(new OrderDelivery { OrderName = request.Name, OrderSum = 1200}, context.CancellationToken);
         return new Int32Value() {Value = id};
     }
 }
