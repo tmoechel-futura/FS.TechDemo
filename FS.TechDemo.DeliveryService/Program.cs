@@ -1,5 +1,4 @@
 using System.Reflection;
-using FS.TechDemo.Shared.options;
 using MassTransit;
 using Serilog;
 using Serilog.Events;
@@ -34,6 +33,8 @@ builder.Services.AddMassTransit(x =>
     x.AddSagaStateMachines(entryAssembly);
     x.AddSagas(entryAssembly);
     x.AddActivities(entryAssembly);
+    
+    x.AddPublishMessageScheduler();
 
     var configSection = builder.Configuration.GetSection(MessageBrokerOptions.MessageBroker);
     var messageBrokerOptions = new MessageBrokerOptions();
@@ -50,7 +51,6 @@ builder.Services.AddMassTransit(x =>
             });
         rabbitMqCfg.ConfigureEndpoints(context);
     });
-
 });
 
 var app = builder.Build();

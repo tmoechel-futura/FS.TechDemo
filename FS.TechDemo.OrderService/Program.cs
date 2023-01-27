@@ -8,13 +8,14 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 using Serilog.Core.Enrichers;
 using Serilog.Events;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLogging();
 
-// builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
-//     .WriteTo.Seq("http://localhost:5341"));
+builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
+    .WriteTo.Seq("http://localhost:5341"));
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -24,10 +25,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 
-builder.WebHost.UseKestrel(so =>
-{
-    so.ConfigureEndpointDefaults(options => options.Protocols = HttpProtocols.Http2);
-});
+
 
 builder.Services.AddMassTransit(x =>
 {
@@ -46,7 +44,9 @@ builder.Services.AddMassTransit(x =>
     x.AddSagaStateMachines(entryAssembly);
     x.AddSagas(entryAssembly);
     x.AddActivities(entryAssembly);
-
+    
+    x.AddPublishMessageScheduler();
+    
     var configSection = builder.Configuration.GetSection(MessageBrokerOptions.MessageBroker);
     var messageBrokerOptions = new MessageBrokerOptions();
     configSection.Bind(messageBrokerOptions);
@@ -79,6 +79,7 @@ builder.Services.AddOptions<MassTransitHostOptions>()
         // if specified, limits the wait time when stopping the bus
         options.StopTimeout = TimeSpan.FromSeconds(30);
     });
+
 
 // Add services to the container.
 builder.Services.AddGrpc();
