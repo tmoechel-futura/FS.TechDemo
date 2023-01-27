@@ -26,6 +26,7 @@ public class OrderService : GrpcOrderService.GrpcOrderServiceBase
 
     public override async Task GetOrders(Empty request, IServerStreamWriter<OrderResponse> responseStream, ServerCallContext context)
     {
+        _logger.LogInformation("Calling GetOrders");
         var entityOrderList = _orderRepository.GetOrderList();
         foreach (var order in entityOrderList)
         {

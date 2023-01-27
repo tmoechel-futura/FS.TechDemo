@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-buyer-bff
+spec:
+  selector:  
+    # connects the service to the label of the deployment
+    app: buyer-bff
+  # type: NodePort # assigns an external ip address to the service defaults to ClusterIP
+  ports:
+    # port of service
+    - port: 8880
+      # target port of service should match containerport of deployment
+      # target port is the port of the container or pod
+      targetPort: 8880
+      # nodePort: 30000 # port where the external service will listen to from a browser e.g hast to between 30000 - 32767 (not required if using ingress)
+      protocol: TCP
+      name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-buyer-bff
+  labels:
+    # this is the label of the deployment to which the selector of the service connects to
+    app: buyer-bff
+# specifies the deployment
+spec:
+  replicas: 1
+#  strategy:
+#    type: RollingUpdate
+#    rollingUpdate:
+#      maxUnavailable: 1
+#      maxSurge: 1
+  selector:
+    matchLabels:
+      # the label app inside the selector of the deployment connects to the label of the pod 
+      # so this defines which pods belong to the deployment
+      app: buyer-bff
+  # specifies the pod
+  template:
+    metadata:
+      # pods get the label through the template blueprint
+      labels:
+        app: buyer-bff
+    spec:
+      containers:
+        - name: buyer-bff
+          image: tmoechel/buyer-bff:1.0 
+          imagePullPolicy: Always
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:8880
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: Logging__SimpleConsole__IncludeScopes
+              value: "false"
+            - name: GRPCOut__GRPC__0__Destination
+              value: "OrderService"
+            - name: GRPCOut__GRPC__0__Channel__Endpoint
+              value: http://svc-order-service:8880
+            - name: GRPCOut__GRPC__0__Channel__UseTls
+              value: "false"  
+          ports:
+            # defines the port the container port of the pod
+            - containerPort: 8880

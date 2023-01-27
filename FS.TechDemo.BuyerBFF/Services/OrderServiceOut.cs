@@ -29,12 +29,15 @@ internal class OrderServiceOut : IOrderServiceOut
         var address = _grpcOptions.Value.Grpc.FirstOrDefault(t => t.Destination == "OrderService")
             ?.Channel
             .Endpoint;
-        
+        _logger.LogInformation("address gprc destination: {Address}", address);
         if (address != null)
         {
             var channel = GrpcChannel.ForAddress(address);
+            _logger.LogInformation("address gprc destination: {Address}", address);
         
             var client = new GrpcOrderService.GrpcOrderServiceClient(channel);
+            _logger.LogInformation("channel : {ChannelTarget}", channel.Target);
+            _logger.LogInformation("channel : {ChannelState}", channel.State);
         
            using (var scope = _serviceScopeFactory.CreateScope())
            {
@@ -43,18 +46,28 @@ internal class OrderServiceOut : IOrderServiceOut
                var logger = loggerFactory.CreateLogger<OrderResponse>();
                logger.LogInformation("calling order service endpoint on {Address}", address);
            }
-           
-            var orderListResponse = client.GetOrders(new Empty());  
-            var responseStream = orderListResponse.ResponseStream;
 
-            var result = new List<OrderResponse>(); 
-            while (await responseStream.MoveNext(cancellationToken)) {
-                var responseItem = responseStream.Current;
-                result.Add(responseItem);
-            }
+           var result = new List<OrderResponse>(); 
+           try
+           {
+               var orderListResponse = client.GetOrders(new Empty());  
+               var responseStream = orderListResponse.ResponseStream;
+
+               
+               while (await responseStream.MoveNext(cancellationToken)) {
+                   var responseItem = responseStream.Current;
+                   result.Add(responseItem);
+               }
+           }
+           catch (Exception e)
+           {
+               Console.WriteLine(e);
+               _logger.LogInformation("channel : {ChannelState}", e.Message + "InnerException: " + e.InnerException?.Message);
+               throw;
+           } 
+           
             return result;
         }
-
         return new List<OrderResponse>();
     }
 

@@ -1,0 +1,45 @@
+version: "3.8"
+networks:
+  grpc-net:
+    name: grpc-net
+    
+services:
+  recipe-bff:
+    hostname: buyer-bff
+    image: buyer-bff
+    depends_on:
+      - order-service
+    build:
+      context: .
+      args:
+        ENVIRONMENT: Debug
+      dockerfile: ./FS.TechDemo.BuyerBFF/Dockerfile
+    ports:
+      - "8101:8080"
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Logging__SimpleConsole__IncludeScopes=false
+      - GRPCOut__GRPC__0__Destination=OrderService
+      - GRPCOut__GRPC__0__Channel__Endpoint=http://order-service:8080
+      - GRPCOut__GRPC__0__Channel__UseTls=false
+    networks:
+      - grpc-net
+    entrypoint: [ "dotnet", "BuyerFF.dll" ]
+  
+  order-service:
+    hostname: orderservice
+    image: order-service
+    build:
+      context: .
+      args:
+        ENVIRONMENT: Debug
+      dockerfile: ./FS.TechDemo.OrderService/Dockerfile
+    ports:
+      - "8201:8080"
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - grpc-net
+    entrypoint: [ "dotnet", "OrderService.dll" ]

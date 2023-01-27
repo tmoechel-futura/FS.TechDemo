@@ -10,18 +10,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLogging();
 
-builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
-    .WriteTo.Seq("http://localhost:5341"));
+// builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
+//     .WriteTo.Seq("http://localhost:5341"));
+//
+// Log.Logger = new LoggerConfiguration()
+//     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+//     .Enrich.FromLogContext()
+//     .Enrich.WithMachineName()
+//     .Enrich.WithProperty("Assembly", typeof(Program).Assembly.GetName().Name!)
+//     .WriteTo.Console()
+//     .CreateLogger();
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .Enrich.WithMachineName()
-    .Enrich.WithProperty("Assembly", typeof(Program).Assembly.GetName().Name!)
-    .WriteTo.Console()
-    .CreateLogger();
-
-builder.AddRabbitMQConfiguration();
+//builder.AddRabbitMQConfiguration();
 
 // Add services to the container.
 builder.Services.AddGrpc();
@@ -30,7 +30,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 
 var app = builder.Build();
-app.UseCustomRequestLogging();
+//app.UseCustomRequestLogging();
 app.MapGrpcService<OrderService>();
 
 app.Run();
