@@ -39,6 +39,8 @@ builder.Services.AddMassTransit(x =>
     x.AddSagaStateMachines(entryAssembly);
     x.AddSagas(entryAssembly);
     x.AddActivities(entryAssembly);
+    
+    x.AddDelayedMessageScheduler();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -48,6 +50,9 @@ builder.Services.AddMassTransit(x =>
             h.Username("rabbitmq-user");
             h.Password("rabbitmq-password");
         });
+        
+        cfg.UseDelayedMessageScheduler();
+        
         cfg.ConfigureEndpoints(context);
     });
 });
