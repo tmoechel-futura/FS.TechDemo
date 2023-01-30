@@ -1,5 +1,6 @@
 using FS.TechDemo.BuyerBFF.Configuration;
 using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Grpc.Net.Client;
 using HotChocolate.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
@@ -32,8 +33,9 @@ internal class OrderServiceOut : IOrderServiceOut
         
         if (address != null)
         {
-            var channel = GrpcChannel.ForAddress(address);
-        
+            var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions() {Credentials = ChannelCredentials.Insecure});
+            //var channel = GrpcChannel.ForAddress(address);
+            
             var client = new GrpcOrderService.GrpcOrderServiceClient(channel);
         
            using (var scope = _serviceScopeFactory.CreateScope())

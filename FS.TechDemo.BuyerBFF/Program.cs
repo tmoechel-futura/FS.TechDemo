@@ -4,6 +4,7 @@ using FS.TechDemo.BuyerBFF.GraphQL;
 using FS.TechDemo.BuyerBFF.Services;
 using FS.TechDemo.Shared;
 using MediatR;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 using Serilog.Events;
 
@@ -11,13 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLogging();
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .Enrich.WithMachineName()
-    .Enrich.WithProperty("Assembly", typeof(Program).Assembly.GetName().Name!)
-    .WriteTo.Console()
-    .CreateLogger();
+// Log.Logger = new LoggerConfiguration()
+//     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+//     .Enrich.FromLogContext()
+//     .Enrich.WithMachineName()
+//     .Enrich.WithProperty("Assembly", typeof(Program).Assembly.GetName().Name!)
+//     .WriteTo.Console()
+//     .CreateLogger();
 
 // graphql specific
 builder.Services
@@ -34,12 +35,17 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddOptions().Configure<GrpcOptions>(builder.Configuration.GetSection(GrpcOptions.GrpcOut));
 
-builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
-    .WriteTo.Seq("http://localhost:5341"));
+// builder.WebHost.UseKestrel(so =>
+// {
+//     so.ConfigureEndpointDefaults(options => options.Protocols = HttpProtocols.Http2);
+// });
+
+// builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
+//     .WriteTo.Seq("http://localhost:5341"));
 
 var app = builder.Build();
 app.UseRouting();
-app.UseCustomRequestLogging();
+//app.UseCustomRequestLogging();
 app.MapGraphQL();
 
 app.Run();

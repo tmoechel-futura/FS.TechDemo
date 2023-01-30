@@ -1,0 +1,117 @@
+version: "3.8"
+networks:
+  grpc-net:
+    name: grpc-net
+    
+services:
+  buyer-bff:
+    hostname: buyer-bff
+    image: buyer-bff
+    depends_on:
+      - order-service
+#      - seq
+    build:
+      context: .
+      args:
+        ENVIRONMENT: Debug
+      dockerfile: ./FS.TechDemo.BuyerBFF/Dockerfile
+    ports:
+      - "8101:8080"
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Logging__SimpleConsole__IncludeScopes=false
+      - GRPCOut__GRPC__0__Destination=OrderService
+      - GRPCOut__GRPC__0__Channel__Endpoint=http://order-service:8080
+      - GRPCOut__GRPC__0__Channel__UseTls=false
+    networks:
+      - grpc-net
+    entrypoint: [ "dotnet", "FS.TechDemo.BuyerBFF.dll" ]
+  
+  order-service:
+    hostname: orderservice
+    image: order-service
+#    depends_on:
+#      - delivery-service
+#      - rabbitmq
+    build:
+      context: .
+      args:
+        ENVIRONMENT: Debug
+      dockerfile: ./FS.TechDemo.OrderService/Dockerfile
+    ports:
+      - "8201:8080"
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_ENVIRONMENT=Development
+#      - MessageBroker__Broker__RabbitMq__Host=rabbitmq
+#      - MessageBroker__Broker__RabbitMq__VirtualHost=/
+#      - MessageBroker__Broker__RabbitMq__Username=rabbitmq-user
+#      - MessageBroker__Broker__RabbitMq__Password=rabbitmq-password
+    networks:
+      - grpc-net
+    entrypoint: [ "dotnet", "FS.TechDemo.OrderService.dll" ]
+
+#  delivery-service:
+#    hostname: deliveryservice
+#    image: delivery-service
+#    depends_on:
+#      - rabbitmq
+#    build:
+#      context: .
+#      args:
+#        ENVIRONMENT: Debug
+#      dockerfile: ./FS.TechDemo.DeliveryService/Dockerfile
+#    ports:
+#      - "8301:8080"
+#    environment:
+#      - ASPNETCORE_URLS=http://+:8080
+#      - ASPNETCORE_ENVIRONMENT=Development
+#      - MessageBroker__Broker__RabbitMq__Host=rabbitmq
+#      - MessageBroker__Broker__RabbitMq__VirtualHost=/
+#      - MessageBroker__Broker__RabbitMq__Username=rabbitmq-user
+#      - MessageBroker__Broker__RabbitMq__Password=rabbitmq-password
+#    networks:
+#      - grpc-net
+#    entrypoint: [ "dotnet", "FS.TechDemo.DeliveryService.dll" ]   
+#    
+#  rabbitmq:
+#    hostname: rabbitmq
+#    image: masstransit/rabbitmq:3
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#    environment:
+#      - RABBITMQ_DEFAULT_USER=rabbitmq-user
+#      - RABBITMQ_DEFAULT_PASS=rabbitmq-password
+#      - RABBITMQ_DEFAULT_VHOST=/
+#    restart: unless-stopped
+#    volumes:
+#      - rabbitmq-data:/var/lib/rabbitmq
+#      - rabbitmq-log:/var/log/rabbitmq
+#    networks:
+#      - grpc-net
+#      
+#  seq:
+#    image: datalust/seq:latest
+#    container_name: seq
+#    restart: unless-stopped
+#    environment:
+#      - ACCEPT_EULA=Y
+#      - GELF_ENABLE_DIAGNOSTICS=True
+#      - SEQ_ADDRESS="http://seq:5341"
+#        # Same errors with:
+#        # - SEQ_ADDRESS="seq:5341"
+#        # - SEQ_ADDRESS="http://host.docker.internal:5341"
+#        # - SEQ_ADDRESS="http://localhost:5341"
+#      # - SEQ_ADDRESS="localhost:5341"
+#      # - SEQ_ADDRESS="127.0.0.1:5341"
+#    ports:
+#      - "12201:12201/udp"
+#
+#volumes:
+#  mysql-db-data: null
+#  rabbitmq-data: null
+#  rabbitmq-log: null
+#  azurite-blob-storage-data: null
+#  

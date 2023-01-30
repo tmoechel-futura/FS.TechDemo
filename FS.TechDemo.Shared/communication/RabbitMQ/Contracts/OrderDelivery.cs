@@ -2,5 +2,5 @@
 
 public record OrderDelivery
 {
-    public string OrderName { get; set; }
+    public string OrderName { get; set; } = "";
 }

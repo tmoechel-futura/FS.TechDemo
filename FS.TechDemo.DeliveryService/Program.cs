@@ -1,12 +1,13 @@
 using System.Reflection;
+using FS.TechDemo.Shared.options;
 using MassTransit;
 using Serilog;
 using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
-    .WriteTo.Seq("http://localhost:5341"));
+// builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
+//     .WriteTo.Seq("http://localhost:5341"));
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -34,21 +35,19 @@ builder.Services.AddMassTransit(x =>
     x.AddSagas(entryAssembly);
     x.AddActivities(entryAssembly);
 
-    x.UsingRabbitMq((context, cfg) =>
-    {
-        //context is the registration context, used to configure endpoints. cfg is the bus factory configurator
-        cfg.Host("localhost", "/", h =>
-        {
-            h.Username("rabbitmq-user");
-            h.Password("rabbitmq-password");
-        });
-        cfg.UseMessageRetry(r=>
-        {
-            r.Immediate(5);
-
-        });
-        cfg.ConfigureEndpoints(context);
+    var configSection = builder.Configuration.GetSection(MessageBrokerOptions.MessageBroker);
+    var messageBrokerOptions = new MessageBrokerOptions();
+    configSection.Bind(messageBrokerOptions);
+    
+    x.UsingRabbitMq((context, rabbitMqCfg) => {
+        rabbitMqCfg.Host(messageBrokerOptions.Broker.RabbitMq.Host,
+            messageBrokerOptions.Broker.RabbitMq.VirtualHost,
+            h => {
+                h.Username(messageBrokerOptions.Broker.RabbitMq.Username);
+                h.Password(messageBrokerOptions.Broker.RabbitMq.Password);
+            });
     });
+
 });
 
 var app = builder.Build();
