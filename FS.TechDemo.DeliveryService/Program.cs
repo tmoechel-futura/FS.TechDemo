@@ -39,6 +39,8 @@ builder.Services.AddMassTransit(x =>
     var messageBrokerOptions = new MessageBrokerOptions();
     configSection.Bind(messageBrokerOptions);
     
+    Log.Logger.Information("Host DeliveryService: {RabbitMqHost}", messageBrokerOptions.Broker.RabbitMq.Host);
+    
     x.UsingRabbitMq((context, rabbitMqCfg) => {
         rabbitMqCfg.Host(messageBrokerOptions.Broker.RabbitMq.Host,
             messageBrokerOptions.Broker.RabbitMq.VirtualHost,
@@ -46,6 +48,7 @@ builder.Services.AddMassTransit(x =>
                 h.Username(messageBrokerOptions.Broker.RabbitMq.Username);
                 h.Password(messageBrokerOptions.Broker.RabbitMq.Password);
             });
+        rabbitMqCfg.ConfigureEndpoints(context);
     });
 
 });

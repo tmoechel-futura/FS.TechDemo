@@ -35,14 +35,6 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddOptions().Configure<GrpcOptions>(builder.Configuration.GetSection(GrpcOptions.GrpcOut));
 
-// builder.WebHost.UseKestrel(so =>
-// {
-//     so.ConfigureEndpointDefaults(options => options.Protocols = HttpProtocols.Http2);
-// });
-
-// builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
-//     .WriteTo.Seq("http://localhost:5341"));
-
 var app = builder.Build();
 app.UseRouting();
 //app.UseCustomRequestLogging();

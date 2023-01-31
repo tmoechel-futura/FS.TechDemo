@@ -14,8 +14,6 @@ public record MessageBrokerMetadata
     public MessageRetry MessageRetry { get; init; } = new();
 
     public RabbitMqOptions RabbitMq { get; init; } = new();
-
-    public AzureServiceBusOptions AzureServiceBus { get; init; } = new();
 }
 
 public record DelayedRedelivery
@@ -39,9 +37,4 @@ public record RabbitMqOptions
 
     public string Username { get; set; } = "";
     public string Password { get; set; } = "";
-}
-
-public record AzureServiceBusOptions
-{
-    public string ConnectionString { get; set; } = "";
 }
