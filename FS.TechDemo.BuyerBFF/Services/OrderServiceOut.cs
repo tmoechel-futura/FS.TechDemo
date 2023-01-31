@@ -34,7 +34,6 @@ internal class OrderServiceOut : IOrderServiceOut
         if (address != null)
         {
             var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions() {Credentials = ChannelCredentials.Insecure});
-            //var channel = GrpcChannel.ForAddress(address);
             
             var client = new GrpcOrderService.GrpcOrderServiceClient(channel);
         
