@@ -1,0 +1,17 @@
+auth:
+  username: "rabbitmq-user"
+  password: "rabbitmq-password"
+
+rabbitmq:
+  erlangCookie: "erlangCookiesecretcookie"
+
+communityPlugins: |
+  https://github.com/rabbitmq/rabbitmq-delayed-message-exchange/releases/download/3.11.1/rabbitmq_delayed_message_exchange-3.11.1.ez
+
+extraPlugins: |
+  rabbitmq_delayed_message_exchange
+
+metrics:
+  enabled: true
+  podAnnotations:
+    { prometheus.io/scrape: "true", prometheus.io/port: "metrics" }

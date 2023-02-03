@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc-delivery-service
+  name: svc-order-service
   labels:
     version: dev
-    product: delivery-service
+    product: order-service
 spec:
   selector:
-    app: delivery-service
+    app: order-service
   type: ClusterIP
   ports:
     - port: 8880
@@ -18,7 +18,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dep-delivery-service
+  name: dep-order-service
 spec:
   replicas: 1
   strategy:
@@ -28,15 +28,15 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      app: delivery-service
+      app: order-service
   template:
     metadata:
       labels:
-        app: delivery-service
+        app: order-service
     spec:
       containers:
-        - name: delivery-service
-          image: tmoechel/delivery-service:1.2
+        - name: order-service
+          image: tmoechel/order-service:1.2
           imagePullPolicy: Always
           env:
             - name: ASPNETCORE_URLS
@@ -50,6 +50,6 @@ spec:
             - name: MessageBroker__Broker__RabbitMq__Username
               value: rabbitmq-user
             - name: MessageBroker__Broker__RabbitMq__Password
-              value: rabbitmq-password  
+              value: rabbitmq-password
           ports:
             - containerPort: 8880
