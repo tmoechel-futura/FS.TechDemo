@@ -1,5 +1,6 @@
 using System.Reflection;
 using FS.TechDemo.Shared.communication.database;
+using FS.TechDemo.Shared.options;
 using MassTransit;
 using Quartz;
 using Serilog;
