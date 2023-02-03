@@ -4,11 +4,8 @@ using FS.TechDemo.OrderService.Services;
 using FS.TechDemo.Shared;
 using FS.TechDemo.Shared.options;
 using MassTransit;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
-using Serilog.Core.Enrichers;
 using Serilog.Events;
-using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 

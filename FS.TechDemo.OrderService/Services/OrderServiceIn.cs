@@ -53,7 +53,7 @@ public class OrderService : GrpcOrderService.GrpcOrderServiceBase
         //     new PollExternalSystemSchedule(),
         //     new { Value = "Hello, World" });
         //
-        // await _messageScheduler.SchedulePublish(TimeSpan.FromSeconds(30), new DemoMessage { Value = "Hello, World" }, context.CancellationToken);
+        await _messageScheduler.SchedulePublish(TimeSpan.FromSeconds(30), new DemoMessage { Value = "Hello, World" }, context.CancellationToken);
 
         return new Int32Value() { Value = id };
     }
@@ -65,8 +65,4 @@ public class PollExternalSystemSchedule : DefaultRecurringSchedule
     {
         CronExpression = "0 0/1 * 1/1 * ? *"; // this means every minute
     }
-}
-
-public class PollExternalSystem
-{
 }
