@@ -44,7 +44,7 @@ spec:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
             - name: MessageBroker__Broker__RabbitMq__Host
-              value: rabbitmq
+              value: rabbitmq-buyer
             - name: MessageBroker__Broker__RabbitMq__VirtualHost
               value: /
             - name: MessageBroker__Broker__RabbitMq__Username
