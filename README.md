@@ -1,7 +1,7 @@
 Building
 
-Connect to your development MySQL locally using myql credentials inside the project, and run this script
+Connect to your development MySQL locally using myql credentials inside the project, and run this script https://github.com/tmoechel-futura/FS.TechDemo/blob/origin/add-message-scheduling-quartz/create_quartz_tables.sql
 
 Open the .sln, and run docker with mysql and rabbitmq instances.
-Then run FS.TechDemo.OrderService for publishing the message and FS.TechDemo.DeliveryService to subscribe to this event.
+Then run FS.TechDemo.OrderService for publishing the message and FS.TechDemo.DeliveryService to subscribe to this event. Test it from BuyerBFF
 
