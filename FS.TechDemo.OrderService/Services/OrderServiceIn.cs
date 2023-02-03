@@ -48,12 +48,12 @@ public class OrderService : GrpcOrderService.GrpcOrderServiceBase
         _logger.LogInformation("Publishing to Bus Name: {RequestName}, {RequestNumber}, {RequestTotal}", request.Name, request.Number, request.Total);
         await _bus.Publish(new OrderDelivery { OrderName = request.Name }, context.CancellationToken);
 
-        var schedule = await _bus.ScheduleRecurringSend<DemoMessage>(
-            new Uri($"rabbitmq://{_bus.Address.Host}/quartz"), 
-            new PollExternalSystemSchedule(),
-            new { Value = "Hello, World" });
-        
-        await _messageScheduler.SchedulePublish(TimeSpan.FromSeconds(30), new DemoMessage { Value = "Hello, World" }, context.CancellationToken);
+        // var schedule = await _bus.ScheduleRecurringSend<DemoMessage>(
+        //     new Uri($"rabbitmq://{_bus.Address.Host}/quartz"), 
+        //     new PollExternalSystemSchedule(),
+        //     new { Value = "Hello, World" });
+        //
+        // await _messageScheduler.SchedulePublish(TimeSpan.FromSeconds(30), new DemoMessage { Value = "Hello, World" }, context.CancellationToken);
 
         return new Int32Value() { Value = id };
     }

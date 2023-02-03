@@ -26,7 +26,6 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 
-
 builder.Services.AddMassTransit(x =>
 {
     //Kebab Case	submit-order
@@ -87,7 +86,7 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 var app = builder.Build();
-//app.UseCustomRequestLogging();
+app.UseCustomRequestLogging();
 app.MapGrpcService<OrderService>();
 
 app.Run();
