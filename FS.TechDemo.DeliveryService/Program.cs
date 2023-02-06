@@ -35,13 +35,15 @@ builder.Services.AddMassTransit(x =>
     x.AddSagas(entryAssembly);
     x.AddActivities(entryAssembly);
     
-    x.AddPublishMessageScheduler();
+    //x.AddMessageScheduler(new Uri("queue:scheduler"));
 
     var configSection = builder.Configuration.GetSection(MessageBrokerOptions.MessageBroker);
     var messageBrokerOptions = new MessageBrokerOptions();
     configSection.Bind(messageBrokerOptions);
     
     Log.Logger.Information("Host DeliveryService: {RabbitMqHost}", messageBrokerOptions.Broker.RabbitMq.Host);
+    
+    x.AddMessageScheduler(new Uri("queue:quartz"));
     
     x.UsingRabbitMq((context, rabbitMqCfg) => {
         rabbitMqCfg.Host(messageBrokerOptions.Broker.RabbitMq.Host,
@@ -50,6 +52,9 @@ builder.Services.AddMassTransit(x =>
                 h.Username(messageBrokerOptions.Broker.RabbitMq.Username);
                 h.Password(messageBrokerOptions.Broker.RabbitMq.Password);
             });
+        
+        rabbitMqCfg.UseMessageScheduler(new Uri("queue:quartz"));
+        
         rabbitMqCfg.ConfigureEndpoints(context);
     });
 });

@@ -48,6 +48,7 @@ services:
       - MessageBroker__Broker__RabbitMq__VirtualHost=/
       - MessageBroker__Broker__RabbitMq__Username=rabbitmq-user
       - MessageBroker__Broker__RabbitMq__Password=rabbitmq-password
+      - MT_Scheduler=quartz
     networks:
       - grpc-net
     entrypoint: [ "dotnet", "FS.TechDemo.OrderService.dll" ]
@@ -71,14 +72,17 @@ services:
       - MessageBroker__Broker__RabbitMq__VirtualHost=/
       - MessageBroker__Broker__RabbitMq__Username=rabbitmq-user
       - MessageBroker__Broker__RabbitMq__Password=rabbitmq-password
+      - MT_Scheduler=quartz
     networks:
       - grpc-net
     entrypoint: [ "dotnet", "FS.TechDemo.DeliveryService.dll" ]   
     
     
-  mysql:
-    hostname: mysql
+  mysql-db:
+    hostname: mysqldb
     image: mysql:8.0
+    cap_add:
+      - SYS_NICE # CAP_SYS_NICE
     environment:
       MYSQL_ROOT_PASSWORD: Admin@123+
     restart: unless-stopped
@@ -86,10 +90,12 @@ services:
       - 3306:3306
     volumes:
       - mysql-db-data:/var/lib/mysqlquartz
+    networks:
+      - grpc-net
 
   rabbitmq:
     hostname: rabbitmq
-    image: masstransit/rabbitmq:3
+    image: masstransit/rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -103,20 +109,27 @@ services:
       - rabbitmq-log:/var/log/rabbitmq
     networks:
       - grpc-net
-        
-        
+                
   quartz:
     hostname: quartz
-    image: masstransit/quartz:latest
+    image: masstransit/quartz
+    depends_on:
+      - mysql-db
+      - rabbitmq
     ports:
       - 5002:80
     environment:
       - MT_Scheduler=quartz
+      - MT_Quartz__Queue=quartz
       - MT_Quartz__DriverDelegateType=Quartz.Impl.AdoJobStore.MySQLDelegate, Quartz
       - MT_Quartz__Provider=MySql
-      - MT_Quartz__ConnectionString=Server=mysql;Database=quartznet;Uid=root;Pwd=Admin@123+
+      - MT_Quartz__ConnectionString=Server=tcp:mysqldb;Database=quartznet;Uid=root;Pwd=Admin@123+
+      - MT_RMQ__HOST=rabbitmq
+      - MT_RMQ__VIRTUALHOST=/
       - MT_RMQ__USER=rabbitmq-user
       - MT_RMQ__PASS=rabbitmq-password
+    networks:
+      - grpc-net
 #      
 #  seq:
 #    image: datalust/seq:latest
