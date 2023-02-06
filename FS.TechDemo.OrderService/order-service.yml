@@ -45,6 +45,8 @@ spec:
               value: Development
             - name: MessageBroker__Broker__RabbitMq__Host
               value: rabbitmq-buyer
+            - name: Database__ConnectionString
+              value: "Server=mysql-testdb;Port=3307;Database=quartz;Uid=root;Pwd=rootpass"  
             - name: MessageBroker__Broker__RabbitMq__VirtualHost
               value: /
             - name: MessageBroker__Broker__RabbitMq__Username

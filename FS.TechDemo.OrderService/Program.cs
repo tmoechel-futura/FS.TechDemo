@@ -1,12 +1,11 @@
 using System.Reflection;
 using FS.TechDemo.OrderService.Repositories;
 using FS.TechDemo.OrderService.Services;
-using FS.TechDemo.Shared;
 using FS.TechDemo.Shared.options;
 using MassTransit;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Quartz;
 using Serilog;
-using Serilog.Core.Enrichers;
 using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +28,43 @@ builder.WebHost.UseKestrel(so =>
     so.ConfigureEndpointDefaults(options => options.Protocols = HttpProtocols.Http2);
 });
 
+var dataAccessOptionsDatabaseSection = builder.Configuration.GetSection(DataAccessOptions.Database);
+var databaseOptions = dataAccessOptionsDatabaseSection.Get<DataAccessOptions.DatabaseOptions>();
+var connectionString = databaseOptions.ConnectionString; 
+
+Log.Logger.Information("Connection String: {ConnectionString}", connectionString);
+
+builder.Services.AddQuartz(q =>
+{
+    q.SchedulerName = "MassTransit-Scheduler";
+    q.SchedulerId = "AUTO";
+
+    q.UseMicrosoftDependencyInjectionJobFactory();
+
+    q.UseDefaultThreadPool(tp =>
+    {
+        tp.MaxConcurrency = 10;
+    });
+
+    q.UseTimeZoneConverter();
+
+    q.UsePersistentStore(s =>
+    {
+        s.UseProperties = true;
+        s.RetryInterval = TimeSpan.FromSeconds(15);
+
+        s.UseMySql(connectionString);
+
+        s.UseJsonSerializer();
+
+        s.UseClustering(c =>
+        {
+            c.CheckinMisfireThreshold = TimeSpan.FromSeconds(20);
+            c.CheckinInterval = TimeSpan.FromSeconds(10);
+        });
+    });
+});
+
 builder.Services.AddMassTransit(x =>
 {
     //Kebab Case	submit-order
@@ -46,6 +82,9 @@ builder.Services.AddMassTransit(x =>
     x.AddSagaStateMachines(entryAssembly);
     x.AddSagas(entryAssembly);
     x.AddActivities(entryAssembly);
+    x.AddPublishMessageScheduler();
+    x.AddQuartzConsumers();
+
 
     var configSection = builder.Configuration.GetSection(MessageBrokerOptions.MessageBroker);
     var messageBrokerOptions = new MessageBrokerOptions();
@@ -61,6 +100,7 @@ builder.Services.AddMassTransit(x =>
                 h.Username(messageBrokerOptions.Broker.RabbitMq.Username);
                 h.Password(messageBrokerOptions.Broker.RabbitMq.Password);
             });
+        rabbitMqCfg.UsePublishMessageScheduler();
         rabbitMqCfg.ConfigureEndpoints(context);
     });
 });
