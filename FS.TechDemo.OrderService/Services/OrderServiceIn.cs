@@ -38,7 +38,7 @@ public class OrderService : GrpcOrderService.GrpcOrderServiceBase
         }
     }
 
-    // demo comment creates an order to test github actions
+    // demo comment creates an order to test github actions changed comment
     public override async Task<Int32Value> CreateOrder(CreateOrderRequest request, ServerCallContext context)
     {
         var id = _orderRepository.AddOrder(request.Name, request.Number, request.Total);
