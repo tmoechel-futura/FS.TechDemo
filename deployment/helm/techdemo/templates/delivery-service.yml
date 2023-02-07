@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
         - name: delivery-service
-          image: tmoechel/delivery-service:1.2
+          image: futuratechdemoacr.azurecr.io/delivery-service:1.2
           imagePullPolicy: Always
           env:
             - name: ASPNETCORE_URLS

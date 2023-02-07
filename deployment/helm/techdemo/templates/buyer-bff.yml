@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
         - name: buyer-bff
-          image: tmoechel/buyer-bff:1.2 
+          image: futuratechdemoacr.azurecr.io/buyer-bff:1.2 
           imagePullPolicy: Always
           env:
             - name: ASPNETCORE_URLS
