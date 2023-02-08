@@ -24,38 +24,6 @@ var connectionString = databaseOptions.ConnectionString;
 
 Log.Logger.Information("Connection String: {ConnectionString}", connectionString);
 
-builder.Services.AddQuartz(q =>
-{
-    q.SchedulerName = "MassTransit-Scheduler";
-    q.SchedulerId = "AUTO";
-
-    q.UseMicrosoftDependencyInjectionJobFactory();
-
-    q.UseDefaultThreadPool(tp =>
-    {
-        tp.MaxConcurrency = 10;
-    });
-
-    q.UseTimeZoneConverter();
-
-    q.UsePersistentStore(s =>
-    {
-        s.UseProperties = true;
-        s.RetryInterval = TimeSpan.FromSeconds(15);
-
-        s.UseMySql(connectionString);
-
-        s.UseJsonSerializer();
-
-        s.UseClustering(c =>
-        {
-            c.CheckinMisfireThreshold = TimeSpan.FromSeconds(20);
-            c.CheckinInterval = TimeSpan.FromSeconds(10);
-        });
-    });
-});
-
-
 builder.Services.AddMassTransit(x =>
 {
     //Kebab Case	submit-order
@@ -74,10 +42,8 @@ builder.Services.AddMassTransit(x =>
     x.AddSagas(entryAssembly);
     x.AddActivities(entryAssembly);
     
-    x.AddPublishMessageScheduler();
-    x.AddQuartzConsumers();
+    x.AddMessageScheduler(new Uri("queue:quartz"));
     
-
     var configSection = builder.Configuration.GetSection(MessageBrokerOptions.MessageBroker);
     var messageBrokerOptions = new MessageBrokerOptions();
     configSection.Bind(messageBrokerOptions);
@@ -92,7 +58,7 @@ builder.Services.AddMassTransit(x =>
                 h.Password(messageBrokerOptions.Broker.RabbitMq.Password);
             });
         
-        rabbitMqCfg.UsePublishMessageScheduler();
+        rabbitMqCfg.UseMessageScheduler(new Uri("queue:quartz"));
         rabbitMqCfg.ConfigureEndpoints(context);
     });
 

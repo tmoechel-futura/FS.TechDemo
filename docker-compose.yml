@@ -74,6 +74,32 @@ services:
     networks:
       - grpc-net
     entrypoint: [ "dotnet", "FS.TechDemo.DeliveryService.dll" ]   
+      
+    
+    
+  mysql:
+    hostname: mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+    restart: unless-stopped
+    ports:
+      - 3307:3307
+    volumes:
+      - mysql-db:/var/lib/mysqlquartz
+  
+  quartz-service:
+    hostname: quartz
+    image: masstransit/quartz:latest
+    ports:
+      - 5002:80
+    environment:
+      - MT_Scheduler=quartz
+      - MT_Quartz__DriverDelegateType=Quartz.Impl.AdoJobStore.MySQLDelegate, Quartz
+      - MT_Quartz__Provider=MySql
+      - MT_Quartz__ConnectionString=Server=mysql;Database=quartz;Uid=root;Pwd=rootpass
+      - MT_RMQ__USER=rabbitmq-user
+      - MT_RMQ__PASS=rabbitmq-password
 
   rabbitmq:
     hostname: rabbitmq
