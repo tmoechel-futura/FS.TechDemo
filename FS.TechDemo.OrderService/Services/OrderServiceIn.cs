@@ -47,11 +47,6 @@ public class OrderService : GrpcOrderService.GrpcOrderServiceBase
         
         _logger.LogInformation("Bus URI: {BusUri}", $"rabbitmq://{_bus.Address.Host}/quartz");
         
-        var schedule = await _bus.ScheduleRecurringSend<DemoMessage>(
-            new Uri($"rabbitmq://{_bus.Address.Host}/quartz"), 
-            new PollExternalSystemSchedule(),
-            new { Value = "Hello, World" });
-        
         await _messageScheduler.SchedulePublish(TimeSpan.FromSeconds(30), new DemoMessage { Value = "Hello, World" }, context.CancellationToken);
         
         return new Int32Value() {Value = id};
