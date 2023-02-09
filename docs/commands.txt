@@ -1,0 +1,48 @@
+Installation of TechDemo Services on Kubernetes
+** General 
+# mount from wsl to windows dir
+cd /mnt/c
+
+# open exporer in wsl
+exlorer.exe .
+
+# get secret from acr
+kubectl get secret acr-secret --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
+
+# go to kubeconfig
+cd /home/tmoechel/.kube
+
+# get ist of aks
+az aks list
+
+# show current aks context info
+az aks show
+
+# show current azure account
+az account show
+
+# port forward to bff on aks
+kubectl port-forward dep-buyer-bff-56dc96879f-6td5b 3310:8880
+
+# connect to acr
+acr login --name [acr-name]
+
+** Helm Install on wsl
+brew install helm
+
+
+** Stop cluster
+az aks stop --name k8-democluster --resource-group rg-azure-resources
+
+** Add Repo to helm
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+** cd to path
+cd /mnt/c/Entwicklung/Learning/FS.TechDemo/deployment/helm/techdemo/templates
+
+** Check connection to acr
+az aks check-acr --resource-group rg-azure-resources --name k8-democluster --acr futuratechdemoacr.azurecr.io
+
+** Create secret to connect to ACR to pull images, username and password must match the Access Keys for the ACR
+kubectl create secret docker-registry acr-secret-1 --docker-server=futuratechdemoacr.azurecr.io --docker-username=futuratechdemoacr --docker-password="4WDn+wOGK5fxL7RE/Z+VQjp7juwzFtpM0/6zPBLd7U+ACRCzNHqH" --docker-email=t.moechel@futura-solutions.de
+
