@@ -61,6 +61,14 @@ spec:
               value: http://svc-order-service:8880
             - name: GRPCOut__GRPC__0__Channel__UseTls
               value: "false"  
+            - name: IdentityProviderAccessOptions__Url
+              value: #{idp-base-url}#
+            - name: IdentityProviderAccessOptions__Realm
+              value: #{idp-realm}#
+            - name: IdentityProviderAccessOptions__AdminUserName
+              value: #{idp-admin-username}#
+            - name: IdentityProviderAccessOptions__AdminPassword
+              value: "#{idp-admin-password}#"  
           ports:
             # defines the port the container port of the pod
             - containerPort: 8880
