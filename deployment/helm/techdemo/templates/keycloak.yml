@@ -40,6 +40,24 @@ spec:
               value: "admin"
             - name: KC_PROXY
               value: "edge"
+            - name: DB_VENDOR
+              value: "MYSQL"
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"
+            - name: DB_ADDR
+              value: "mysql"
+            - name: DB_DATABASE
+              value: "keycloak"
+            - name: DB_USER
+              value: "keycloak"  
+            - name: DB_PASSWORD
+              value: "password"
+#            - name: KEYCLOAK_FRONTEND_URL
+#              value: "#{keycloak_frontend_url}#"
+            - name: KEYCLOAK_USER
+              value: "admin"
+            - name: KEYCLOAK_PASSWORD
+              value: "admin"  
           ports:
             - name: http
               containerPort: 8080
