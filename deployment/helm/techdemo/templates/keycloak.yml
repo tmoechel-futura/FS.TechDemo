@@ -45,7 +45,7 @@ spec:
             - name: PROXY_ADDRESS_FORWARDING
               value: "true"
             - name: DB_ADDR
-              value: "mysql"
+              value: "mysql-testdb"
             - name: DB_DATABASE
               value: "keycloak"
             - name: DB_USER
