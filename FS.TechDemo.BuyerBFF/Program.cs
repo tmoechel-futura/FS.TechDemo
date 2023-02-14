@@ -1,6 +1,7 @@
 using System.Reflection;
 using FS.TechDemo.BuyerBFF.Configuration;
 using FS.TechDemo.BuyerBFF.GraphQL;
+using FS.TechDemo.BuyerBFF.IdentityProvider.Extensions;
 using FS.TechDemo.BuyerBFF.Services;
 using FS.TechDemo.Shared;
 using MediatR;
@@ -34,6 +35,7 @@ builder.Services.AddSingleton<ILoggerFactory, LoggerFactory>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddOptions().Configure<GrpcOptions>(builder.Configuration.GetSection(GrpcOptions.GrpcOut));
+builder.Services.AddKeycloak(builder.Configuration);
 
 var app = builder.Build();
 app.UseRouting();

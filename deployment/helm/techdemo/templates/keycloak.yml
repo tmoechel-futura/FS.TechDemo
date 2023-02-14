@@ -11,7 +11,7 @@ spec:
       targetPort: 8080
   selector:
     app: keycloak
-  type: LoadBalancer
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,7 +32,7 @@ spec:
       containers:
         - name: keycloak
           image: quay.io/keycloak/keycloak:20.0.3
-#          args: ["start-dev"]
+          args: ["start-dev"]
           env:
             - name: KEYCLOAK_ADMIN
               value: "admin"
@@ -48,10 +48,12 @@ spec:
               value: "mysql-testdb"
             - name: DB_DATABASE
               value: "keycloak"
+            - name: HOSTNAME
+              value: "localhost"
             - name: DB_USER
-              value: "keycloak"  
+              value: "root"  
             - name: DB_PASSWORD
-              value: "password"
+              value: "rootpass"
 #            - name: KEYCLOAK_FRONTEND_URL
 #              value: "#{keycloak_frontend_url}#"
             - name: KEYCLOAK_USER
