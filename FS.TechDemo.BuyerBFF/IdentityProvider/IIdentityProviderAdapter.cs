@@ -8,6 +8,8 @@ public interface IIdentityProviderAdapter<TUser>
     Task<bool> SendUserUpdateEmailAsync(string userId, string clientId, string redirectUri, int? lifespan = null);
 
     Task<TUser> GetUserAsync(Guid userId);
+    
+    Task<IEnumerable<TUser>> GetUserListAsync();
 
     Task<bool> UpdateUserAsync(TUser user, Guid userId);
 

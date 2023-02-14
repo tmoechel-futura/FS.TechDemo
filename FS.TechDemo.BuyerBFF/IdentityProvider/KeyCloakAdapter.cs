@@ -5,6 +5,7 @@ using Flurl.Http;
 using FS.Services.User.IdentityProvider;
 using Keycloak.Net;
 using Keycloak.Net.Models.Roles;
+using Keycloak.Net.Models.Users;
 
 namespace FS.TechDemo.BuyerBFF.IdentityProvider;
 
@@ -41,6 +42,11 @@ public class KeyCloakAdapter : KeycloakClient, IIdentityProviderAdapter<Keycloak
     }
 
     public async Task<Keycloak.Net.Models.Users.User> GetUserAsync(Guid userId) => await GetUserAsync(_realm, userId.ToString());
+
+    Task<IEnumerable<User>> IIdentityProviderAdapter<User>.GetUserListAsync()
+    {
+        return GetUsersAsync("buyer");
+    }
 
     public async Task<bool> UpdateUserAsync(Keycloak.Net.Models.Users.User user, Guid userId)
     {

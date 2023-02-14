@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
         - name: buyer-bff
-          image: tmoechel/buyer-bff:1.3 
+          image: tmoechel/buyer-bff:1.4 
           imagePullPolicy: Always
           env:
             - name: ASPNETCORE_URLS
@@ -62,13 +62,13 @@ spec:
             - name: GRPCOut__GRPC__0__Channel__UseTls
               value: "false"  
             - name: IdentityProviderAccessOptions__Url
-              value: #{idp-base-url}#
+              value: "keycloak"
             - name: IdentityProviderAccessOptions__Realm
-              value: #{idp-realm}#
+              value: "buyer"
             - name: IdentityProviderAccessOptions__AdminUserName
-              value: #{idp-admin-username}#
+              value: "admin"
             - name: IdentityProviderAccessOptions__AdminPassword
-              value: "#{idp-admin-password}#"  
+              value: "admin"  
           ports:
             # defines the port the container port of the pod
             - containerPort: 8880

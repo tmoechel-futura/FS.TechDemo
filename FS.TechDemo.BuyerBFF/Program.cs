@@ -30,6 +30,8 @@ builder.Services
 
 // interface registration
 builder.Services.AddScoped<IOrderServiceOut, OrderServiceOut>();
+builder.Services.AddScoped<IUserServiceOut, UserServiceOut>();
+
 builder.Services.AddSingleton<ILoggerFactory, LoggerFactory>();
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
