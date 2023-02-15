@@ -19,7 +19,7 @@ public class UserTypeResolvableRequestHandler : IRequestHandler<UserTypeResolvab
 
     public async Task<object> Handle(UserTypeResolvableRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Getting orders from order service");
+        _logger.LogInformation("Getting users from user service");
         using (var scope = _serviceScopeFactory.CreateScope())
         {
             var scopedServices = scope.ServiceProvider;

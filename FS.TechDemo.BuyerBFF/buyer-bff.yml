@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
         - name: buyer-bff
-          image: tmoechel/buyer-bff:1.4 
+          image: tmoechel/buyer-bff:1.5 
           imagePullPolicy: Always
           env:
             - name: ASPNETCORE_URLS
@@ -62,11 +62,11 @@ spec:
             - name: GRPCOut__GRPC__0__Channel__UseTls
               value: "false"  
             - name: IdentityProviderAccessOptions__Url
-              value: "keycloak"
+              value: "scc-keycloak:8080"
             - name: IdentityProviderAccessOptions__Realm
               value: "buyer"
             - name: IdentityProviderAccessOptions__AdminUserName
-              value: "admin"
+              value: "buyeradmin"
             - name: IdentityProviderAccessOptions__AdminPassword
               value: "admin"  
           ports:

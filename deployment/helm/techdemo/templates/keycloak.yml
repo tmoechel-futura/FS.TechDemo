@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: keycloak
+  name: svc-keycloak
   labels:
     app: keycloak
 spec:
@@ -11,7 +11,7 @@ spec:
       targetPort: 8080
   selector:
     app: keycloak
-  type: ClusterIP
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,18 +32,18 @@ spec:
       containers:
         - name: keycloak
           image: quay.io/keycloak/keycloak:20.0.3
-          args: ["start-dev"]
+          args: ["start"]
           env:
             - name: KEYCLOAK_ADMIN
               value: "admin"
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: "admin"
-            - name: KC_PROXY
-              value: "edge"
+#            - name: KC_PROXY
+#              value: "edge"
             - name: DB_VENDOR
               value: "MYSQL"
-            - name: PROXY_ADDRESS_FORWARDING
-              value: "true"
+#            - name: PROXY_ADDRESS_FORWARDING
+#              value: "true"
             - name: DB_ADDR
               value: "mysql-testdb"
             - name: DB_DATABASE

@@ -11,6 +11,7 @@ namespace FS.TechDemo.BuyerBFF.IdentityProvider;
 
 public class KeyCloakAdapter : KeycloakClient, IIdentityProviderAdapter<Keycloak.Net.Models.Users.User>
 {
+    private readonly ILogger<KeyCloakAdapter> _logger;
     private readonly IMapper _mapper;
     private readonly string _realm;
 
@@ -18,10 +19,14 @@ public class KeyCloakAdapter : KeycloakClient, IIdentityProviderAdapter<Keycloak
     private static readonly List<string> DefaultRequiredActions = new() { "UPDATE_PASSWORD", VerifyEmailRequiredAction, "TERMS_AND_CONDITIONS" };
     private const string OrganisationAdminRole = "organisation_admin";
 
-    public KeyCloakAdapter(IMapper mapper, string baseUrl, string userName, string password, string realm) : base(baseUrl, userName, password)
+    public KeyCloakAdapter(ILogger logger, IMapper mapper, string baseUrl, string userName, string password, string realm) : base(baseUrl, userName, password)
     {
         _mapper = mapper;
         _realm = realm;
+        logger.LogInformation($"KeyCloak URL: {baseUrl}");
+        logger.LogInformation($"KeyCloak UserName: {userName}");
+        logger.LogInformation($"KeyCloak Password: {password}");
+        logger.LogInformation($"KeyCloak Realm: {realm}");
     }
 
     public async Task<bool> SendUserUpdateEmailAsync(string userId, string clientId, string redirectUri, int? lifespan = null)
