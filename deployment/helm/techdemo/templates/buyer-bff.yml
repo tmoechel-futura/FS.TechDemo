@@ -62,9 +62,9 @@ spec:
             - name: GRPCOut__GRPC__0__Channel__UseTls
               value: "false"
             - name: IdentityProviderAccessOptions__Url
-              value: "svc-keycloak:8080"
+              value: "http://127.0.0.1:5000/"
             - name: IdentityProviderAccessOptions__Realm
-              value: "buyer"
+              value: "Buyer"
             - name: IdentityProviderAccessOptions__AdminUserName
               value: "buyeradmin"
             - name: IdentityProviderAccessOptions__AdminPassword
