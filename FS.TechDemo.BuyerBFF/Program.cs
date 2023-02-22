@@ -40,6 +40,7 @@ builder.Services.AddOptions().Configure<GrpcOptions>(builder.Configuration.GetSe
 builder.Services.AddKeycloak(builder.Configuration);
 
 var app = builder.Build();
+app.UsePathBase("/buyerbff");
 app.UseRouting();
 //app.UseCustomRequestLogging();
 app.MapGraphQL();

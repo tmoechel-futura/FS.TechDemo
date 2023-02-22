@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingressbff
+#  annotations:
+#    kubernetes.io/ingress.class: azure/application-gateway
+#    appgw.ingress.kubernetes.io/health-probe-path: "/healthz"
+#    appgw.ingress.kubernetes.io/health-probe-timeout: "20"
+#    appgw.ingress.kubernetes.io/health-probe-unhealthy-threshold: "20"
+#    appgw.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+#  tls:
+#    - hosts:
+#        -  #{stage}##{hostname}#
+#    - secretName: tls-secret
+  rules:
+    - host: dev.testfutura-cloud.com
+      http:
+        paths:
+          - path: /buyerbff/graphql
+            pathType: Prefix
+            backend:
+              service:
+                name: svc-buyer-bff
+                port:
+                  number: 8880
